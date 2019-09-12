@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'color.dart';
+import 'pages/about.dart';
+import 'pages/addToDo.dart';
+import 'pages/filters.dart';
+import 'pages/home.dart';
+
+enum Pages { Home, AddToDo, Filters, About }
 
 class SideBar extends StatefulWidget {
   @override
@@ -31,17 +37,42 @@ class SideBarState extends State<SideBar> {
                 new BoxDecoration(color: MaterialColor(0xFF00ACC1, color)),
           ),
           ListTile(
-            title: Text("Adicionar Tarefa", style: TextStyle(fontSize: 16)),
-            trailing: Icon(Icons.add),
+            title: Text("Home", style: TextStyle(fontSize: 16)),
+            trailing: Icon(Icons.home),
+            onTap: () {
+              Navigator.of(context).pop();
+
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => HomePage()));
+            },
           ),
           ListTile(
-            title: Text("Filtro", style: TextStyle(fontSize: 16)),
-            trailing: Icon(Icons.filter_list),
-          ),
+              title: Text("Adicionar Tarefa", style: TextStyle(fontSize: 16)),
+              trailing: Icon(Icons.add),
+              onTap: () {
+                Navigator.of(context).pop();
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => AddToDoPage()));
+              }),
           ListTile(
-            title: Text("Sobre", style: TextStyle(fontSize: 16)),
-            trailing: Icon(Icons.info),
-          ),
+              title: Text("Filtros", style: TextStyle(fontSize: 16)),
+              trailing: Icon(Icons.filter_list),
+              onTap: () {
+                Navigator.of(context).pop();
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => FiltersPage()));
+              }),
+          ListTile(
+              title: Text("Sobre", style: TextStyle(fontSize: 16)),
+              trailing: Icon(Icons.info),
+              onTap: () {
+                Navigator.of(context).pop();
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => AboutPage()));
+              }),
         ],
       ),
     );
