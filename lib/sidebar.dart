@@ -4,6 +4,8 @@ import 'pages/about.dart';
 import 'pages/addToDo.dart';
 import 'pages/filters.dart';
 import 'pages/home.dart';
+import 'data/blocs/bloc_provider.dart';
+import 'data/blocs/todo_bloc.dart';
 
 enum Pages { Home, AddToDo, Filters, About }
 
@@ -43,7 +45,7 @@ class SideBarState extends State<SideBar> {
               Navigator.of(context).pop();
 
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => HomePage()));
+                  builder: (BuildContext context) => BlocProvider(child: HomePage(), bloc: ToDoBloc())));
             },
           ),
           ListTile(
@@ -53,7 +55,7 @@ class SideBarState extends State<SideBar> {
                 Navigator.of(context).pop();
 
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => AddToDoPage()));
+                    builder: (BuildContext context) => BlocProvider(child: AddToDoPage(), bloc: ToDoBloc())));
               }),
           ListTile(
               title: Text("Filtros", style: TextStyle(fontSize: 16)),
@@ -62,7 +64,7 @@ class SideBarState extends State<SideBar> {
                 Navigator.of(context).pop();
 
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => FiltersPage()));
+                    builder: (BuildContext context) => BlocProvider(child: FiltersPage(), bloc: ToDoBloc())));
               }),
           ListTile(
               title: Text("Sobre", style: TextStyle(fontSize: 16)),
@@ -71,7 +73,7 @@ class SideBarState extends State<SideBar> {
                 Navigator.of(context).pop();
 
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => AboutPage()));
+                    builder: (BuildContext context) => BlocProvider(child: AboutPage(), bloc: ToDoBloc())));
               }),
         ],
       ),

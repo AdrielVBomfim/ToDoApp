@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+
+
 enum DeadlineStatus{
   overdue,
   nearDealine,
@@ -12,8 +15,8 @@ class ToDo {
   var dueDate;
 
   ToDo({
-    this.id,
-    this.name,
+    @required this.id,
+    @required this.name,
     this.description,
     this.dueDate,
   });

@@ -42,14 +42,14 @@ class DBProvider {
   }
 
 
-  newNote(ToDo todo) async {
+  Future<int> newToDo(ToDo todo) async {
     final db = await database;
     var res = await db.insert('todo', todo.toJson());
 
     return res;
   }
 
-  getNotes() async {
+  Future<List<ToDo>> getToDos() async {
     final db = await database;
     var res = await db.query('todo');
     List<ToDo> todo = res.isNotEmpty ? res.map((todo) => ToDo.fromJson(todo)).toList() : [];
@@ -57,23 +57,25 @@ class DBProvider {
     return todo;
   }
 
-  getNote(int id) async {
+  Future<ToDo> getToDo(int id) async {
     final db = await database;
     var res = await db.query('todo', where: 'id = ?', whereArgs: [id]);
 
     return res.isNotEmpty ? ToDo.fromJson(res.first) : null;
   }
 
-  updateNote(ToDo todo) async {
+  Future<int> updateToDo(ToDo todo) async {
     final db = await database;
     var res = await db.update('todo', todo.toJson(), where: 'id = ?', whereArgs: [todo.id]);
 
     return res;
   }
 
-  deleteNote(int id) async {
+  Future<int> deleteToDo(int id) async {
     final db = await database;
 
-    db.delete('todo', where: 'id = ?', whereArgs: [id]);
+    var res = db.delete('todo', where: 'id = ?', whereArgs: [id]);
+
+    return res;
   }
 }
