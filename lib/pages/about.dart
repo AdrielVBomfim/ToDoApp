@@ -14,7 +14,7 @@ class AboutPageState extends State<AboutPage> {
         title: Text("ToDo App"),
       ),
       body: Text("About"),
-      drawer: SideBar(), // This trailing comma makes auto-formatting nicer for build methods.
+      drawer: SideBar(numPending: 0, numOverdue: 0, numDone: 0), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

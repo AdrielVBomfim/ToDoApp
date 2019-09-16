@@ -27,20 +27,19 @@ class DBProvider {
     Directory documentsDir = await getApplicationDocumentsDirectory();
     String path = join(documentsDir.path, 'app.db');
 
-    return await openDatabase(path, version: 1, onOpen: (db) async {
-    }, onCreate: (Database db, int version) async {
-      // Create the note table
+    return await openDatabase(path, version: 1, onOpen: (db) async {},
+        onCreate: (Database db, int version) async {
       await db.execute('''
                 CREATE TABLE todo(
                     id INTEGER PRIMARY KEY,
                     name TEXT DEFAULT '',
                     description TEXT DEFAULT '',
                     dueDate TEXT DEFAULT ''
+                    isDone INTEGER DEFAULT 0
                 )
             ''');
     });
   }
-
 
   Future<int> newToDo(ToDo todo) async {
     final db = await database;
@@ -52,7 +51,8 @@ class DBProvider {
   Future<List<ToDo>> getToDos() async {
     final db = await database;
     var res = await db.query('todo');
-    List<ToDo> todo = res.isNotEmpty ? res.map((todo) => ToDo.fromJson(todo)).toList() : [];
+    List<ToDo> todo =
+        res.isNotEmpty ? res.map((todo) => ToDo.fromJson(todo)).toList() : [];
 
     return todo;
   }
@@ -66,7 +66,8 @@ class DBProvider {
 
   Future<int> updateToDo(ToDo todo) async {
     final db = await database;
-    var res = await db.update('todo', todo.toJson(), where: 'id = ?', whereArgs: [todo.id]);
+    var res = await db
+        .update('todo', todo.toJson(), where: 'id = ?', whereArgs: [todo.id]);
 
     return res;
   }
