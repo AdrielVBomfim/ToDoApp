@@ -11,9 +11,19 @@ import 'models/todo_model.dart';
 enum Pages { Home, AddToDo, Filters, About }
 
 class SideBar extends StatelessWidget {
-  final numPending, numOverdue, numDone;
+  final todos, hasTodos;
+  var numPending = 0, numOverdue = 0, numDone = 0;
 
-  SideBar({this.numPending, this.numOverdue, this.numDone});
+  SideBar({this.todos, this.hasTodos}){
+    if(hasTodos)
+      for(int i = 0; i < todos.length; i++)
+        if(todos[i].isDone == 1)
+          numDone++;
+        else if(todos[i].evalDeadline() == DeadlineStatus.nearDealine || todos[i].evalDeadline() == DeadlineStatus.farDeadline || todos[i].evalDeadline() == DeadlineStatus.undefined)
+          numPending++;
+        else
+          numOverdue++;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +35,13 @@ class SideBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text("Tarefas Pendentes: ${numPending}",
+                Text("Tarefas Pendentes: $numPending",
                     style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF))),
                 Padding(padding: EdgeInsets.only(top: 30.0)),
-                Text("Tarefas Atrasadas: ${numOverdue}",
+                Text("Tarefas Atrasadas: $numOverdue",
                     style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF))),
                 Padding(padding: EdgeInsets.only(top: 30.0)),
-                Text("Tarefas Concluidas: ${numDone}",
+                Text("Tarefas Concluidas: $numDone",
                     style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF)))
               ],
             ),

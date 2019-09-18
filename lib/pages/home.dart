@@ -73,21 +73,6 @@ class HomePageState extends State<HomePage> {
     _todosBloc.inUpdateTodo.add(newTodo);
   }
 
-  Widget _handleSideBar(List<ToDo> todos, bool hasData){
-    var numPending = 0, numOverdue = 0, numDone = 0;
-
-    if(hasData)
-      for(int i = 0; i < todos.length; i++)
-        if(todos[i].isDone == 1)
-          numDone++;
-        else if(todos[i].evalDeadline() == DeadlineStatus.nearDealine || todos[i].evalDeadline() == DeadlineStatus.farDeadline || todos[i].evalDeadline() == DeadlineStatus.undefined)
-          numPending++;
-        else
-          numOverdue++;
-
-    return SideBar(numPending: numPending, numOverdue: numOverdue, numDone: numDone);
-  }
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ToDo>>(
@@ -229,7 +214,7 @@ class HomePageState extends State<HomePage> {
                   else
                     return Divider(height: 0.0);
                 }),
-            drawer: _handleSideBar(snapshot.data, snapshot.hasData),
+            drawer: SideBar(todos: snapshot.data,hasTodos: snapshot.hasData),
           );
         });
   }

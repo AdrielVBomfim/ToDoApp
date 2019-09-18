@@ -14,7 +14,7 @@ class FiltersPageState extends State<FiltersPage> {
         title: Text("ToDo App"),
       ),
       body: Text("Filters"),
-      drawer: SideBar(numPending: 0, numOverdue: 0, numDone: 0), // This trailing comma makes auto-formatting nicer for build methods.
+      drawer: SideBar(todos: [],hasTodos: false), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
