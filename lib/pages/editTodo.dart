@@ -64,7 +64,7 @@ class EditToDoPageState extends State<EditToDoPage> {
       _todosBloc.updated.listen((updated){
         if(updated){
           ifLoading = false;
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
         }
       });
     });

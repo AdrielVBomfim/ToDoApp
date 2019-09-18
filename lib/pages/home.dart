@@ -170,8 +170,8 @@ class HomePageState extends State<HomePage> {
                                             padding: EdgeInsets.only(
                                                 right: 100.0, left: 100.0),
                                             child: InkWell(
-                                              onTap: () {
-                                                Navigator.of(context).push(
+                                              onTap: () async {
+                                                final updated = await Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (BuildContext
                                                                 context) =>
@@ -186,6 +186,11 @@ class HomePageState extends State<HomePage> {
                                                                   bloc:
                                                                       ToDoBloc()),
                                                             )));
+
+                                                if(updated != null && updated)
+                                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                                      content: Text('Tarefa atualizada'),
+                                                      duration: Duration(seconds: 3)));
                                               },
                                               child: Icon(Icons.edit,
                                                   color: Colors.grey),
