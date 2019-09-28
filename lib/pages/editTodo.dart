@@ -52,7 +52,7 @@ class EditToDoPageState extends State<EditToDoPage> {
   void _handleEditToDo() {
     setState(() {
       DateTime time = DateTime.now();
-      DateTime newTime = DateTime(year, month, day, time.hour, time.second,
+      DateTime newTime = DateTime(year, month, day, 23, 59, 59,
           time.millisecond, time.microsecond);
 
       todo.name = textName.text;
@@ -68,6 +68,34 @@ class EditToDoPageState extends State<EditToDoPage> {
         }
       });
     });
+  }
+
+  Future<bool> _asyncConfirmDialog(BuildContext context) async {
+    return await showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Editar Tarefa?'),
+          content: const Text(
+              'Tem certeza que deseja tornar esta tarefa atrasada?'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Não'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            FlatButton(
+              child: const Text('Sim'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   void _handleDateChange(int day, int month, int year) {
@@ -219,12 +247,30 @@ class EditToDoPageState extends State<EditToDoPage> {
                             saveColor = Color(0xFF1B5E20);
                           });
                         },
-                        onTapUp: (TapUpDetails details) {
+                        onTapUp: (TapUpDetails details) async {
                           setState(() {
                             saveColor = Color(0xFF4CAF50);
-                            _handleEditToDo();
+                            ifLoading = true;
                           });
-                          //_handleAddToDo(snapshot);
+
+                          if(DateTime.now().isAfter(DateTime(year, month, day, 23, 59, 59)) && ifDueDate) {
+                            if(await _asyncConfirmDialog(context)) {
+                              setState(() {
+                                ifLoading = false;
+                              });
+                              _handleEditToDo();
+                            }
+                            else
+                              setState(() {
+                                ifLoading = false;
+                              });
+                          }
+                          else{
+                            setState(() {
+                              ifLoading = false;
+                            });
+                            _handleEditToDo();
+                          }
                         },
                         child: AnimatedContainer(
                             padding: EdgeInsets.all(12.0),

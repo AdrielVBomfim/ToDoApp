@@ -79,4 +79,8 @@ class ToDoBloc implements BlocBase{
 
     getTodos();
   }
+
+  void _handleFiltersTodo(List<bool> filters){
+
+  }
 }

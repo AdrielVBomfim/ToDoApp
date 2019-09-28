@@ -32,19 +32,19 @@ class AddToDoPageState extends State<AddToDoPage> {
   }
 
   Widget _handleAddToDo(AsyncSnapshot<List<ToDo>> snapshot) {
+    DateTime time = DateTime.now();
+    DateTime newTime = DateTime(year, month, day, 23, 59, 59,
+        time.millisecond, time.microsecond);
+    ToDo temp = ToDo(
+        id: DateTime.now().millisecondsSinceEpoch,
+        name: textName.text,
+        description: textDescription.text,
+        dueDate: ifDueDate ? newTime.toString() : '',
+        isDone: 0);
+
+    _todosBloc.inAddTodo.add(temp);
+
     setState(() {
-      DateTime time = DateTime.now();
-      DateTime newTime = DateTime(year, month, day, time.hour, time.second,
-          time.millisecond, time.microsecond);
-      ToDo temp = ToDo(
-          id: DateTime.now().millisecondsSinceEpoch,
-          name: textName.text,
-          description: textDescription.text,
-          dueDate: ifDueDate ? newTime.toString() : '',
-          isDone: 0);
-
-      _todosBloc.inAddTodo.add(temp);
-
       _todosBloc.added.listen((added) {
         if (added) {
           ifLoading = false;
@@ -57,6 +57,34 @@ class AddToDoPageState extends State<AddToDoPage> {
     return SnackBar(
       content: Text('Tarefa criada'),
       duration: Duration(seconds: 3)
+    );
+  }
+
+  Future<bool> _asyncConfirmDialog(BuildContext context) async {
+    return await showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Adicionar Tarefa?'),
+          content: const Text(
+              'Tem certeza que deseja adicionar esta tarefa atrasada?'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Não'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            FlatButton(
+              child: const Text('Sim'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            )
+          ],
+        );
+      },
     );
   }
 
@@ -179,7 +207,7 @@ class AddToDoPageState extends State<AddToDoPage> {
                                               style: TextStyle(fontSize: 18.0)),
                                           NumberPicker.integer(
                                             initialValue: year,
-                                            minValue: DateTime.now().year,
+                                            minValue: DateTime.now().year - 1000,
                                             maxValue: DateTime.now().year + 1000,
                                             onChanged: (newValue) =>
                                                 _handleDateChange(
@@ -207,12 +235,22 @@ class AddToDoPageState extends State<AddToDoPage> {
                                   saveColor = Color(0xFF1B5E20);
                                 });
                               },
-                              onTapUp: (TapUpDetails details) {
+                              onTapUp: (TapUpDetails details) async {
                                 setState(() {
                                   saveColor = Color(0xFF4CAF50);
                                   ifLoading = true;
                                 });
-                                Scaffold.of(context).showSnackBar(_handleAddToDo(snapshot));
+
+                                if(DateTime.now().isAfter(DateTime(year, month, day, 23, 59, 59)) && ifDueDate) {
+                                  if(await _asyncConfirmDialog(context))
+                                    Scaffold.of(context).showSnackBar(_handleAddToDo(snapshot));
+                                  else
+                                    setState(() {
+                                      ifLoading = false;
+                                    });
+                                }
+                                else
+                                  Scaffold.of(context).showSnackBar(_handleAddToDo(snapshot));
                               },
                               child: AnimatedContainer(
                                   padding: EdgeInsets.all(12.0),
